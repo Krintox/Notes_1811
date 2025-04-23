@@ -39,7 +39,7 @@ export default function NoteItem({ note, userId }: { note: any; userId: string }
   const deleteMutation = useMutation({
     mutationFn: () => deleteNote(note.id),
     onSuccess: () => {
-      queryClient.invalidateQueries(['notes', userId]);
+      queryClient.invalidateQueries({ queryKey: ['notes', userId] });
       toast.success('Note deleted successfully');
     },
     onError: (error: Error) => {

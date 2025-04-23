@@ -57,13 +57,13 @@ export default function NoteList({ userId }: { userId: string }) {
         />
       )}
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {notes?.map((note, index) => (
-          <div>
-            <NoteItem note={note} userId={userId} />
-          </div>
-        ))}
-      </div>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {notes?.map((note) => (
+        <div key={note.id}>
+          <NoteItem note={note} userId={userId} />
+        </div>
+      ))}
+    </div>
     </div>
   );
 }

@@ -53,11 +53,9 @@ npm install
 
 # 3. Set up environment variables
 # Create a .env.local file with these variables:
-cat <<EOT > .env.local
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-key
 GEMINI_API_KEY=your-gemini-key
-EOT
 
 # 4. Run the development server
 npm run dev

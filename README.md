@@ -125,17 +125,6 @@ git push origin feature/AmazingFeature
 6. Open Pull Request on GitHub
 <!-- ```
 ``` -->
-<br></br>
-
-## 📜 License
-```text
-MIT License
-
-Copyright (c) [year] [fullname]
-
-Permission is hereby granted...
-[Include full license text if needed]
-```
 
 ## 📬 Contact
 <!-- ```text -->
@@ -149,6 +138,6 @@ https://github.com/Krintox/Notes_1811
 
 ---
 
-```text
+<center>
 Made with ❤️ and ☕ by Krintox
-```
+</center>

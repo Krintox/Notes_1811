@@ -53,9 +53,11 @@ npm install
 
 # 3. Set up environment variables
 # Create a .env.local file with these variables:
+cat <<EOT > .env.local
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-key
 GEMINI_API_KEY=your-gemini-key
+EOT
 
 # 4. Run the development server
 npm run dev
@@ -101,17 +103,23 @@ Then open your browser and visit:
 # 2. Clone your fork
 git clone https://github.com/Krintox/Notes_1811
 cd Notes_1811
+```
 
+```
 # 3. Create feature branch
 git checkout -b feature/AmazingFeature
-
+```
+```
 # 4. Commit changes
 git add .
 git commit -m "Add some AmazingFeature"
+```
 
+```
 # 5. Push to branch
 git push origin feature/AmazingFeature
-
+```
+```
 # 6. Open Pull Request on GitHub
 ```
 
@@ -126,14 +134,14 @@ Permission is hereby granted...
 ```
 
 ## 📬 Contact
-```text
+<!-- ```text -->
 Shashank Suggala 
 X: [@ShashankSUggala](https://x.com/ShashankSuggala?t=U7hOWqIR9QwCeFqGYaD0_g&s=09) 
 Email: shashanktsx@gmail.com
 
 Project Link: 
 https://github.com/Krintox/Notes_1811
-```
+<!-- ``` -->
 
 ---
 

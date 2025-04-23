@@ -1,12 +1,5 @@
 'use client';
 
-// import dynamic from 'next/dynamic';
-// const MotionDiv = dynamic(() =>
-//   import('framer-motion').then(mod => mod.motion.div),
-//   { ssr: false }
-// );
-
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteNote, summarizeNote } from '../actions';
 import { useState } from 'react';
@@ -29,7 +22,6 @@ import { MoreVertical, Trash2, Sparkles, Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import NoteForm from './note-form';
 import { toast } from 'react-hot-toast';
-// import { motion } from 'framer-motion';
 
 export default function NoteItem({ note, userId }: { note: any; userId: string }) {
   const queryClient = useQueryClient();
@@ -51,6 +43,7 @@ export default function NoteItem({ note, userId }: { note: any; userId: string }
     mutationFn: () => summarizeNote(note.id, note.content),
     onSuccess: (data) => {
       setSummary(data.summary);
+      queryClient.invalidateQueries({ queryKey: ['notes', userId] });
       toast.success('Note summarized successfully');
     },
     onError: (error: Error) => {
@@ -105,7 +98,7 @@ export default function NoteItem({ note, userId }: { note: any; userId: string }
           <CardContent>
             <p className="whitespace-pre-line text-gray-300">{note.content}</p>
             {summary && (
-              <div>
+              <div className="mt-4 p-4 bg-gray-700 rounded-lg">
                 <h3 className="font-medium text-primary-400 mb-2">AI Summary</h3>
                 <p className="text-gray-300">{summary}</p>
               </div>

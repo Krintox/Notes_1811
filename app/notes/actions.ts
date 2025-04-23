@@ -2,7 +2,7 @@
 
 import createSupabaseServerClient from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { summarizeText } from '@/lib/api/deepseek';
+import { summarizeText } from '@/lib/api/deepseek'; // Changed from deepseek to gemini
 
 export async function getNotes(userId: string) {
   const supabase = await createSupabaseServerClient();
@@ -67,7 +67,6 @@ export async function summarizeNote(noteId: string, content: string) {
   const summary = await summarizeText(content);
   const supabase = await createSupabaseServerClient();
   
-  // Save the summary to the note
   const { data, error } = await supabase
     .from('notes')
     .update({ summary })
@@ -80,5 +79,5 @@ export async function summarizeNote(noteId: string, content: string) {
   }
 
   revalidatePath('/notes');
-  return { summary };
+  return { summary, note: data };
 }

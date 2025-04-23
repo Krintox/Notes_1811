@@ -125,14 +125,6 @@ export const LoginForm = () => {
         >
           Google
         </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={loginWithGitHub}
-          className="w-full bg-gray-700 hover:bg-gray-600 text-gray-300"
-        >
-          GitHub
-        </Button>
       </div>
     </form>
   );

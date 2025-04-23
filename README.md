@@ -98,30 +98,30 @@ Then open your browser and visit:
 
 ## 🤝 Contributing
 
+### 1. Fork the repository
+### 2. Clone your fork
 ```bash
-# 1. Fork the repository
-# 2. Clone your fork
 git clone https://github.com/Krintox/Notes_1811
 cd Notes_1811
 ```
 
+### 3. Create feature branch
 ```
-# 3. Create feature branch
 git checkout -b feature/AmazingFeature
 ```
+### 4. Commit changes
 ```
-# 4. Commit changes
 git add .
 git commit -m "Add some AmazingFeature"
 ```
 
+### 5. Push to branch
 ```
-# 5. Push to branch
 git push origin feature/AmazingFeature
 ```
-```
-# 6. Open Pull Request on GitHub
-```
+### 6. Open Pull Request on GitHub
+<!-- ```
+``` -->
 
 ## 📜 License
 ```text
@@ -135,7 +135,7 @@ Permission is hereby granted...
 
 ## 📬 Contact
 <!-- ```text -->
-Shashank Suggala 
+Shashank Suggala <br></br>
 X: [@ShashankSUggala](https://x.com/ShashankSuggala?t=U7hOWqIR9QwCeFqGYaD0_g&s=09) 
 Email: shashanktsx@gmail.com
 

@@ -43,23 +43,26 @@ AI-powered notes application that helps you organize, summarize, and manage your
 
 ### Installation
 
+1. Clone the repository
 ```bash
-# 1. Clone the repository
 git clone https://github.com/Krintox/Notes_1811
 cd aethernotes
+```
 
-# 2. Install dependencies
+2. Install dependencies
+```
 npm install
+```
 
-# 3. Set up environment variables
-# Create a .env.local file with these variables:
-cat <<EOT > .env.local
+3. Set up environment variables
+```
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-key
 GEMINI_API_KEY=your-gemini-key
-EOT
+```
 
-# 4. Run the development server
+4. Run the development server
+```
 npm run dev
 ```
 
@@ -88,13 +91,13 @@ Then open your browser and visit:
 ```
 
 ### AI Integration
-```bash
+<!-- ```bash -->
 1. Get API key from [Gemini](https://gemini.com)
 2. Configure the endpoint in:
    app/api/summarize/route.ts
 3. Add your API key to .env.local:
    GEMINI_API_KEY=your_api_key_here
-```
+<!-- ``` -->
 
 ## 🤝 Contributing
 

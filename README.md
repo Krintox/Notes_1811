@@ -1,57 +1,40 @@
-# Implement Authentication with Supabase in Next.js 14
+# Mini AI-Powered Notes App
 
-In this article, you'll learn how to integrate Supabase with Next.js 14 for email and password authentication, as well as Google and GitHub OAuth. The tutorial covers protecting pages to ensure only authenticated users can access them, fetching the user's session in a React Server Component, and automatically refreshing cookies in the background when the user's session expires.
+## Objective
 
-![Implement Authentication with Supabase in Next.js 14](https://codevoweb.com/wp-content/uploads/2024/02/Implement-Authentication-with-Supabase-in-Next.js-14.webp)
+This project assesses proficiency in modern web development, specifically in integrating frontend and backend components. The app is designed to manage notes with features like authentication, note creation, editing, deleting, and AI-powered summarization.
 
-## Topics Covered
+## Tech Stack
 
-- Running the Supabase and Next.js 14 Authentication App
-- Demo of the tRPC Application
-- Set up the Next.js 14 Project
-- Install the Necessary Dependencies
-- Create a Project on Supabase
-- Create a Supabase Server Client
-- Create the Validation Schemas
-- Create Server Actions to Handle SignUp and Login
-- Get the Authenticated User's Session
-- Create a Header Component with Logout Functionality
-- Register an Account with Supabase in Next.js 14
-  - Create the Registration Form
-  - Create the Registration Page
-- Login with Supabase in Next.js 14
-  - Create the Login Form
-  - Create the Login Page
-- Create the Home Page and a Protected Page
-- Set up OAuth with Supabase in Next.js 14
-  - Generate the OAuth Credentials on GitHub
-  - Generate the OAuth Credentials on Google
-  - Create a Supabase Browser Client
-  - Create an API endpoint for handling
-  - Implement OAuth in the Login Form
-- Create a Next.js Middleware to Refresh Cookies
-- Conclusion
+- **Frontend:** Next.js (TypeScript), TailwindCSS, Shadcn
+- **Backend:** Supabase for authentication and data storage
+- **AI Summarization:** DeepSeek API
+- **State Management:** React Query for data fetching and caching
+- **Deployment:** Vercel
 
-Read the entire article here: [https://codevoweb.com/implement-authentication-with-supabase-in-nextjs-14/](https://codevoweb.com/implement-authentication-with-supabase-in-nextjs-14/)
+## Features
 
-# Setup Google and GitHub OAuth with Supabase in Next.js 14
+### 1. **User Authentication**
+   - Users can sign up and log in using:
+     - **Google authentication**
+     - **Email & Password**
 
-This tutorial guides you through the process of integrating Google and GitHub OAuth into your Next.js 14 project using Supabase. If you've ever struggled with managing multiple passwords for different websites, you understand the importance of simplifying the sign-in process. 
+### 2. **Note Creation, Editing, and Deletion**
+   - Users can:
+     - Create new notes.
+     - Edit existing notes.
+     - Delete notes.
 
-![Setup Google and GitHub OAuth with Supabase in Next.js 14](https://codevoweb.com/wp-content/uploads/2024/02/Setup-Google-and-GitHub-OAuth-with-Supabase-in-Next.js-14.webp)
+### 3. **AI Summarization**
+   - Users can summarize the content of their notes using AI-powered summarization.
+   - Integrated DeepSeek API (or alternative like Groq) to generate note summaries.
 
-## Topics Covered
+### 4. **State Management**
+   - The application uses **React Query** to handle data fetching and caching, ensuring fast and efficient loading of user data and notes.
 
-- How to Run the Next.js Application on Your Machine
-- Demo of the Google and GitHub OAuth Flow
-- Create a Project on Supabase
-- Configure the Google and GitHub OAuth Providers on Supabase
-  - Generate the OAuth Credentials on GitHub
-  - Generate the OAuth Credentials on Google
-- Create a Supabase Browser Client
-- Implement Google and GitHub OAuth
-- Create a Route to Exchange the OAuth Code for a Session
-- Create Middleware to Refresh Expired Cookies
-- Conclusion
+### 5. **Responsive Design**
+   - The application is fully responsive and built with **TailwindCSS** and **Shadcn UI components** for a polished and user-friendly interface.
 
-Read the entire article here: [https://codevoweb.com/setup-google-github-oauth-with-supabase-in-nextjs-14/](https://codevoweb.com/setup-google-github-oauth-with-supabase-in-nextjs-14/)
+### 6. **Deployment**
+   - The app is deployed on **Vercel**, and the live application is accessible from the provided Vercel URL.
+

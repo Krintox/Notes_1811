@@ -128,16 +128,17 @@ git push origin feature/AmazingFeature
 
 ## 📬 Contact
 <!-- ```text -->
-Shashank Suggala <br></br>
+Shashank Suggala
+
 X: [@ShashankSUggala](https://x.com/ShashankSuggala?t=U7hOWqIR9QwCeFqGYaD0_g&s=09) 
 Email: shashanktsx@gmail.com
 
 Project Link: 
-https://github.com/Krintox/Notes_1811
+https://github.com/Krintox/Notes_1811/
 <!-- ``` -->
 
 ---
 
-<center>
+<!-- <center> -->
 Made with ❤️ and ☕ by Krintox
-</center>
+<!-- </center> -->

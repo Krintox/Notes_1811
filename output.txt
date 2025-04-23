@@ -1,0 +1,905 @@
+{
+  "extends": "next/core-web-vitals"
+}
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+toc.txt
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+setup-project:
+	pnpm create next-app nextjs14-supabase-ssr-authentication
+install-dependencies:
+	pnpm add @supabase/ssr
+	pnpm add zod @hookform/resolvers react-hook-form 
+	pnpm add react-hot-toastimport { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { NextResponse, type NextRequest } from 'next/server';
+
+export async function middleware(request: NextRequest) {
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value;
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          request.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
+          response.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+        },
+        remove(name: string, options: CookieOptions) {
+          request.cookies.set({
+            name,
+            value: '',
+            ...options,
+          });
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
+          response.cookies.set({
+            name,
+            value: '',
+            ...options,
+          });
+        },
+      },
+    }
+  );
+
+  await supabase.auth.getUser();
+
+  return response;
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+};
+/** @type {import('next').NextConfig} */
+const nextConfig = {};
+
+export default nextConfig;
+{
+  "name": "nextjs14-supabase-ssr-authentication",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.3.4",
+    "@supabase/ssr": "^0.0.10",
+    "next": "14.1.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-hook-form": "^7.49.3",
+    "react-hot-toast": "^2.4.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
+  }
+}
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@hookform/resolvers':
+    specifier: ^3.3.4
+    version: 3.3.4(react-hook-form@7.49.3)
+  '@supabase/ssr':
+    specifier: ^0.0.10
+    version: 0.0.10(@supabase/supabase-js@2.39.3)
+  next:
+    specifier: 14.1.0
+    version: 14.1.0(react-dom@18.2.0)(react@18.2.0)
+  react:
+    specifier: ^18
+    version: 18.2.0
+  react-dom:
+    specifier: ^18
+    version: 18.2.0(react@18.2.0)
+  react-hook-form:
+    specifier: ^7.49.3
+    version: 7.49.3(react@18.2.0)
+  react-hot-toast:
+    specifier: ^2.4.1
+    version: 2.4.1(csstype@3.1.3)(react-dom@18.2.0)(react@18.2.0)
+  zod:
+    specifier: ^3.22.4
+    version: 3.22.4
+
+devDependencies:
+  '@types/node':
+    specifier: ^20
+    version: 20.11.13
+  '@types/react':
+    specifier: ^18
+    version: 18.2.48
+  '@types/react-dom':
+    specifier: ^18
+    version: 18.2.18
+  autoprefixer:
+    specifier: ^10.0.1
+    version: 10.4.17(postcss@8.4.33)
+  eslint:
+    specifier: ^8
+    version: 8.56.0
+  eslint-config-next:
+    specifier: 14.1.0
+    version: 14.1.0(eslint@8.56.0)(typescript@5.3.3)
+  postcss:
+    specifier: ^8
+    version: 8.4.33
+  tailwindcss:
+    specifier: ^3.3.0
+    version: 3.4.1
+  typescript:
+    specifier: ^5
+    version: 5.3.3
+
+
+# Implement Authentication with Supabase in Next.js 14
+
+In this article, you'll learn how to integrate Supabase with Next.js 14 for email and password authentication, as well as Google and GitHub OAuth. The tutorial covers protecting pages to ensure only authenticated users can access them, fetching the user's session in a React Server Component, and automatically refreshing cookies in the background when the user's session expires.
+
+![Implement Authentication with Supabase in Next.js 14](https://codevoweb.com/wp-content/uploads/2024/02/Implement-Authentication-with-Supabase-in-Next.js-14.webp)
+
+## Topics Covered
+
+- Running the Supabase and Next.js 14 Authentication App
+- Demo of the tRPC Application
+- Set up the Next.js 14 Project
+- Install the Necessary Dependencies
+- Create a Project on Supabase
+- Create a Supabase Server Client
+- Create the Validation Schemas
+- Create Server Actions to Handle SignUp and Login
+- Get the Authenticated User's Session
+- Create a Header Component with Logout Functionality
+- Register an Account with Supabase in Next.js 14
+  - Create the Registration Form
+  - Create the Registration Page
+- Login with Supabase in Next.js 14
+  - Create the Login Form
+  - Create the Login Page
+- Create the Home Page and a Protected Page
+- Set up OAuth with Supabase in Next.js 14
+  - Generate the OAuth Credentials on GitHub
+  - Generate the OAuth Credentials on Google
+  - Create a Supabase Browser Client
+  - Create an API endpoint for handling
+  - Implement OAuth in the Login Form
+- Create a Next.js Middleware to Refresh Cookies
+- Conclusion
+
+Read the entire article here: [https://codevoweb.com/implement-authentication-with-supabase-in-nextjs-14/](https://codevoweb.com/implement-authentication-with-supabase-in-nextjs-14/)
+
+# Setup Google and GitHub OAuth with Supabase in Next.js 14
+
+This tutorial guides you through the process of integrating Google and GitHub OAuth into your Next.js 14 project using Supabase. If you've ever struggled with managing multiple passwords for different websites, you understand the importance of simplifying the sign-in process. 
+
+![Setup Google and GitHub OAuth with Supabase in Next.js 14](https://codevoweb.com/wp-content/uploads/2024/02/Setup-Google-and-GitHub-OAuth-with-Supabase-in-Next.js-14.webp)
+
+## Topics Covered
+
+- How to Run the Next.js Application on Your Machine
+- Demo of the Google and GitHub OAuth Flow
+- Create a Project on Supabase
+- Configure the Google and GitHub OAuth Providers on Supabase
+  - Generate the OAuth Credentials on GitHub
+  - Generate the OAuth Credentials on Google
+- Create a Supabase Browser Client
+- Implement Google and GitHub OAuth
+- Create a Route to Exchange the OAuth Code for a Session
+- Create Middleware to Refresh Expired Cookies
+- Conclusion
+
+Read the entire article here: [https://codevoweb.com/setup-google-github-oauth-with-supabase-in-nextjs-14/](https://codevoweb.com/setup-google-github-oauth-with-supabase-in-nextjs-14/)
+import type { Config } from 'tailwindcss';
+
+const config: Config = {
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        'ct-dark-600': '#222',
+        'ct-dark-200': '#e5e7eb',
+        'ct-dark-100': '#f5f6f7',
+        'ct-blue-600': '#2363eb',
+        'ct-yellow-600': '#f9d13e',
+      },
+      fontFamily: {
+        Poppins: ['Poppins, sans-serif'],
+      },
+      container: {
+        center: true,
+        padding: '1rem',
+        screens: {
+          lg: '1125px',
+          xl: '1125px',
+          '2xl': '1125px',
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+export default config;
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { Toaster } from 'react-hot-toast';
+
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'Create Next App',
+  description: 'Generated by create next app',
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang='en'>
+      <body className={inter.className}>
+        {children}
+        <Toaster />
+      </body>
+    </html>
+  );
+}
+import Header from '@/components/header';
+
+export default function Home() {
+  return (
+    <>
+      <Header />
+      <section className='bg-ct-blue-600 min-h-screen pt-20'>
+        <div className='max-w-4xl mx-auto bg-ct-dark-100 rounded-md h-[20rem] flex justify-center items-center'>
+          <p className='text-3xl font-semibold'>
+            Implement Authentication with Supabase in Next.js 14
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}
+"use server";
+
+import createSupabaseServerClient from "@/lib/supabase/server";
+import { CreateUserInput, LoginUserInput } from "@/lib/user-schema";
+
+export async function signUpWithEmailAndPassword({
+  data,
+  emailRedirectTo,
+}: {
+  data: CreateUserInput;
+  emailRedirectTo?: string;
+}) {
+  const supabase = await createSupabaseServerClient();
+  const result = await supabase.auth.signUp({
+    email: data.email,
+    password: data.password,
+    options: {
+      emailRedirectTo,
+    },
+  });
+  return JSON.stringify(result);
+}
+
+export async function signInWithEmailAndPassword(data: LoginUserInput) {
+  const supabase = await createSupabaseServerClient();
+  const result = await supabase.auth.signInWithPassword({
+    email: data.email,
+    password: data.password,
+  });
+  return JSON.stringify(result);
+}
+import { NextResponse } from "next/server";
+import createSupabaseServerClient from "@/lib/supabase/server";
+
+export async function GET(request: Request) {
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
+  const next = searchParams.get("next") ?? "/";
+
+  if (code) {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) {
+      return NextResponse.redirect(`${origin}${next}`);
+    }
+  }
+
+  // return the user to an error page with instructions
+  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+}
+'use client';
+
+import { LoginUserInput, loginUserSchema } from '@/lib/user-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { signInWithEmailAndPassword } from '../_actions';
+import toast from 'react-hot-toast';
+import useSupabaseClient from '@/lib/supabase/client';
+
+export const LoginForm = () => {
+  const router = useRouter();
+  const [error, setError] = useState('');
+  const [isPending, startTransition] = useTransition();
+  const supabase = useSupabaseClient();
+
+  const methods = useForm<LoginUserInput>({
+    resolver: zodResolver(loginUserSchema),
+  });
+
+  const {
+    reset,
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = methods;
+
+  const onSubmitHandler: SubmitHandler<LoginUserInput> = async (values) => {
+    startTransition(async () => {
+      const result = await signInWithEmailAndPassword(values);
+
+      const { error } = JSON.parse(result);
+      if (error?.message) {
+        setError(error.message);
+        toast.error(error.message);
+        console.log('Error message', error.message);
+        reset({ password: '' });
+        return;
+      }
+
+      setError('');
+      toast.success('successfully logged in');
+      router.push('/');
+    });
+  };
+
+  const loginWithGitHub = () => {
+    supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    });
+  };
+
+  const loginWithGoogle = () => {
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    });
+  };
+
+  const input_style =
+    'form-control block w-full px-4 py-5 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none';
+
+  return (
+    <form onSubmit={handleSubmit(onSubmitHandler)}>
+      {error && (
+        <p className='text-center bg-red-300 py-4 mb-6 rounded'>{error}</p>
+      )}
+      <div className='mb-6'>
+        <input
+          type='email'
+          {...register('email')}
+          placeholder='Email address'
+          className={`${input_style}`}
+        />
+        {errors['email'] && (
+          <span className='text-red-500 text-xs pt-1 block'>
+            {errors['email']?.message as string}
+          </span>
+        )}
+      </div>
+      <div className='mb-6'>
+        <input
+          type='password'
+          {...register('password')}
+          placeholder='Password'
+          className={`${input_style}`}
+        />
+        {errors['password'] && (
+          <span className='text-red-500 text-xs pt-1 block'>
+            {errors['password']?.message as string}
+          </span>
+        )}
+      </div>
+      <button
+        type='submit'
+        style={{ backgroundColor: `${isPending ? '#ccc' : '#3446eb'}` }}
+        className='inline-block px-7 py-4 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full'
+        disabled={isPending}
+      >
+        {isPending ? 'loading...' : 'Sign In'}
+      </button>
+
+      <div className='flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5'>
+        <p className='text-center font-semibold mx-4 mb-0'>OR</p>
+      </div>
+
+      <a
+        className='px-7 py-2 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center mb-3'
+        style={{ backgroundColor: '#3b5998' }}
+        onClick={loginWithGoogle}
+        role='button'
+      >
+        <Image
+          className='pr-2'
+          src='/images/google.svg'
+          alt=''
+          style={{ height: '2rem' }}
+          width={35}
+          height={35}
+        />
+        Continue with Google
+      </a>
+      <a
+        className='px-7 py-2 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center'
+        style={{ backgroundColor: '#55acee' }}
+        onClick={loginWithGitHub}
+        role='button'
+      >
+        <Image
+          className='pr-2'
+          src='/images/github.svg'
+          alt=''
+          width={40}
+          height={40}
+        />
+        Continue with GitHub
+      </a>
+    </form>
+  );
+};
+import Header from '@/components/header';
+import { LoginForm } from './login-form';
+
+export default async function LoginPage() {
+  return (
+    <>
+      <Header />
+
+      <section className='bg-ct-blue-600 min-h-screen pt-20'>
+        <div className='container mx-auto px-6 py-12 h-full flex justify-center items-center'>
+          <div className='md:w-8/12 lg:w-5/12 bg-white px-8 py-10'>
+            <LoginForm />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+import Header from '@/components/header';
+import getUserSession from '@/lib/getUserSession';
+import { redirect } from 'next/navigation';
+
+export default async function ProfilePage() {
+  const {
+    data: { session },
+  } = await getUserSession();
+
+  if (!session) {
+    return redirect('/login');
+  }
+
+  const user = session.user;
+
+  return (
+    <>
+      <Header />
+      <section className='bg-ct-blue-600  min-h-screen pt-20'>
+        <div className='max-w-4xl mx-auto bg-ct-dark-100 rounded-md h-[20rem] flex justify-center items-center'>
+          <div>
+            <p className='mb-3 text-5xl text-center font-semibold'>
+              Profile Page
+            </p>
+            <div className='mt-8'>
+              <p className='mb-3'>Id: {user.id}</p>
+              <p className='mb-3'>Role: {user.role}</p>
+              <p className='mb-3'>Email: {user.email}</p>
+              <p className='mb-3'>Provider: {user.app_metadata['provider']}</p>
+              <p className='mb-3'>Created At: {user.created_at}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+import Header from '@/components/header';
+import { RegisterForm } from './register-form';
+
+export default async function RegisterPage() {
+  return (
+    <>
+      <Header />
+      
+      <section className="bg-ct-blue-600 min-h-screen pt-20">
+        <div className="container mx-auto px-6 py-12 h-full flex justify-center items-center">
+          <div className="md:w-8/12 lg:w-5/12 bg-white px-8 py-10">
+            <RegisterForm />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+"use client";
+
+import { CreateUserInput, createUserSchema } from "@/lib/user-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { signUpWithEmailAndPassword } from "../_actions";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+
+export const RegisterForm = () => {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const methods = useForm<CreateUserInput>({
+    resolver: zodResolver(createUserSchema),
+  });
+
+  const {
+    reset,
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = methods;
+
+  const onSubmitHandler: SubmitHandler<CreateUserInput> = (values) => {
+    startTransition(async () => {
+      const result = await signUpWithEmailAndPassword({
+        data: values,
+        emailRedirectTo: `${location.origin}/auth/callback`,
+      });
+      const { error } = JSON.parse(result);
+      if (error?.message) {
+        toast.error(error.message);
+        console.log("Error message", error.message);
+        reset({ password: "" });
+        return;
+      }
+
+      toast.success("registered successfully");
+      router.push("/login");
+    });
+  };
+
+  const input_style =
+    "form-control block w-full px-4 py-5 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none";
+
+  return (
+    <form onSubmit={handleSubmit(onSubmitHandler)}>
+      <div className="mb-6">
+        <input
+          {...register("name")}
+          placeholder="Name"
+          className={`${input_style}`}
+        />
+        {errors["name"] && (
+          <span className="text-red-500 text-xs pt-1 block">
+            {errors["name"]?.message as string}
+          </span>
+        )}
+      </div>
+      <div className="mb-6">
+        <input
+          type="email"
+          {...register("email")}
+          placeholder="Email address"
+          className={`${input_style}`}
+        />
+        {errors["email"] && (
+          <span className="text-red-500 text-xs pt-1 block">
+            {errors["email"]?.message as string}
+          </span>
+        )}
+      </div>
+      <div className="mb-6">
+        <input
+          type="password"
+          {...register("password")}
+          placeholder="Password"
+          className={`${input_style}`}
+        />
+        {errors["password"] && (
+          <span className="text-red-500 text-xs pt-1 block">
+            {errors["password"]?.message as string}
+          </span>
+        )}
+      </div>
+      <div className="mb-6">
+        <input
+          type="password"
+          {...register("passwordConfirm")}
+          placeholder="Confirm Password"
+          className={`${input_style}`}
+        />
+        {errors["passwordConfirm"] && (
+          <span className="text-red-500 text-xs pt-1 block">
+            {errors["passwordConfirm"]?.message as string}
+          </span>
+        )}
+      </div>
+      <button
+        type="submit"
+        style={{ backgroundColor: `${isPending ? "#ccc" : "#3446eb"}` }}
+        className="inline-block px-7 py-4 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
+        disabled={isPending}
+      >
+        {isPending ? "loading..." : "Sign Up"}
+      </button>
+    </form>
+  );
+};
+import Link from 'next/link';
+import getUserSession from '@/lib/getUserSession';
+import createSupabaseServerClient from '@/lib/supabase/server';
+
+const Header = async () => {
+  const { data } = await getUserSession();
+
+  const logoutAction = async () => {
+    'use server';
+    const supabase = await createSupabaseServerClient();
+    await supabase.auth.signOut();
+  };
+
+  return (
+    <header className='bg-white h-20'>
+      <nav className='h-full flex justify-between container items-center'>
+        <div>
+          <Link href='/' className='text-ct-dark-600 text-2xl font-semibold'>
+            CodevoWeb
+          </Link>
+        </div>
+        <ul className='flex items-center space-x-4'>
+          <li>
+            <Link href='/' className='text-ct-dark-600'>
+              Home
+            </Link>
+          </li>
+          {!data.session && (
+            <>
+              <li>
+                <Link href='/register' className='text-ct-dark-600'>
+                  Register
+                </Link>
+              </li>
+              <li>
+                <Link href='/login' className='text-ct-dark-600'>
+                  Login
+                </Link>
+              </li>
+            </>
+          )}
+          {data.session && (
+            <form action={logoutAction} className='flex'>
+              <li>
+                <Link href='/profile' className='text-ct-dark-600'>
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <button className='ml-4'>Logout</button>
+              </li>
+            </form>
+          )}
+        </ul>
+      </nav>
+    </header>
+  );
+};
+
+export default Header;
+'use server';
+
+import createSupabaseServerClient from './supabase/server';
+
+export default async function getUserSession() {
+  const supabase = await createSupabaseServerClient();
+  return supabase.auth.getSession();
+}
+import { object, string, TypeOf } from 'zod';
+
+export const createUserSchema = object({
+  name: string({ required_error: 'Name is required' }).min(
+    1,
+    'Name is required'
+  ),
+  email: string({ required_error: 'Email is required' })
+    .min(1, 'Email is required')
+    .email('Invalid email'),
+  photo: string().optional(),
+  password: string({ required_error: 'Password is required' })
+    .min(1, 'Password is required')
+    .min(8, 'Password must be more than 8 characters')
+    .max(32, 'Password must be less than 32 characters'),
+  passwordConfirm: string({
+    required_error: 'Please confirm your password',
+  }).min(1, 'Please confirm your password'),
+}).refine((data) => data.password === data.passwordConfirm, {
+  path: ['passwordConfirm'],
+  message: 'Passwords do not match',
+});
+
+export const loginUserSchema = object({
+  email: string({ required_error: 'Email is required' })
+    .min(1, 'Email is required')
+    .email('Invalid email or password'),
+  password: string({ required_error: 'Password is required' }).min(
+    1,
+    'Password is required'
+  ),
+});
+
+export type CreateUserInput = TypeOf<typeof createUserSchema>;
+export type LoginUserInput = TypeOf<typeof loginUserSchema>;
+import { useMemo } from 'react';
+import { createBrowserClient } from '@supabase/ssr';
+
+export function getSupabaseBrowserClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+
+function useSupabaseClient() {
+  return useMemo(getSupabaseBrowserClient, []);
+}
+
+export default useSupabaseClient;
+'use server';
+
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+
+export default async function createSupabaseServerClient() {
+  const cookieStore = cookies();
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          cookieStore.set({ name, value, ...options });
+        },
+        remove(name: string, options: CookieOptions) {
+          cookieStore.set({ name, value: '', ...options });
+        },
+      },
+    }
+  );
+}

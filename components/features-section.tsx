@@ -25,7 +25,7 @@ export default function FeaturesSection() {
           <div>
             <h3 className="text-2xl font-bold mb-4 text-primary-400">AI-Powered Summaries</h3>
             <p className="text-gray-300 mb-6">
-              Let our DeepSeek AI analyze your notes and extract key points with intelligent summarization technology.
+              Let our Gemini AI analyze your notes and extract key points with intelligent summarization technology.
             </p>
             <ul className="space-y-3">
               <li className="flex items-center">

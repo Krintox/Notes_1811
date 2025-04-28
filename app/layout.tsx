@@ -7,7 +7,7 @@ import QueryProvider from '@/components/query-provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'AI Notes App',
+  title: 'AetherNotes',
   description: 'AI-powered notes application',
 };
 

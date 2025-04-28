@@ -48,7 +48,7 @@ const Header = () => {
         <div>
           <Link href="/" className="text-2xl font-semibold">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
-              AI Notes
+              AetherNotes
             </span>
           </Link>
         </div>
